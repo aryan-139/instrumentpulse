@@ -66,7 +66,7 @@ export class CSVService {
     static async getCompaniesByStatus(status: string): Promise<BSECompany[]> {
         try {
             const companies = await this.getBSECompanies();
-            return companies.filter(company => 
+            return companies.filter(company =>
                 company.status.toLowerCase() === status.toLowerCase()
             );
         } catch (error) {
