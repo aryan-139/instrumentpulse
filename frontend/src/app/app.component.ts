@@ -1,12 +1,22 @@
 import { Component } from '@angular/core';
-import { RouterOutlet } from '@angular/router';
+import { DashboardComponent } from './features/dashboard/components/dashboard/dashboard.component';
+import { HttpClientModule } from '@angular/common/http';
 
 @Component({
   selector: 'app-root',
-  imports: [RouterOutlet],
-  templateUrl: './app.component.html',
-  styleUrl: './app.component.css'
+  standalone: true,
+  imports: [DashboardComponent, HttpClientModule],
+  template: `
+    <app-dashboard></app-dashboard>
+  `,
+  styles: [`
+    :host {
+      display: block;
+      min-height: 100vh;
+      background-color: #f5f5f5;
+    }
+  `]
 })
 export class AppComponent {
-  title = 'frontend';
+  title = 'instrumentpulse';
 }
