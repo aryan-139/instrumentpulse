@@ -174,6 +174,8 @@ export class DashboardComponent implements OnInit {
                 return '$';
             case 'regex':
                 return '.*';
+            case 'smart':
+                return 'smart'
             default:
                 return '?';
         }
