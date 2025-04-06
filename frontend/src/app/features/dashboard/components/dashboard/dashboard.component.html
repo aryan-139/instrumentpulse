@@ -41,7 +41,9 @@
         </div>
 
         <div *ngIf="!loading && !error" class="companies-grid">
-            <div *ngFor="let company of filteredCompanies" class="company-card">
+            <div *ngFor="let company of filteredCompanies" class="company-card" 
+                 (click)="onCompanyClick(company)" 
+                 style="cursor: pointer">
                 <div class="company-header">
                     <h3>{{ company.securityName }}</h3>
                     <span class="status-badge" [ngClass]="company.status">

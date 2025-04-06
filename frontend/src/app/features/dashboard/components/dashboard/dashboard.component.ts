@@ -3,6 +3,7 @@ import { DashboardService, Company, StatusStats } from '../../services/dashboard
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { debounceTime, distinctUntilChanged, Subject } from 'rxjs';
+import { Router } from '@angular/router';
 
 type SearchMode = 'partial' | 'exact' | 'startsWith' | 'endsWith' | 'regex' | 'smart';
 
@@ -28,12 +29,15 @@ export class DashboardComponent implements OnInit {
         { value: 'startsWith', label: 'Starts With' },
         { value: 'endsWith', label: 'Ends With' },
         { value: 'regex', label: 'Regex' },
-        { value: 'smart', label: 'Smart'}
+        { value: 'smart', label: 'Smart' }
     ];
     private searchSubject = new Subject<string>();
     readonly Object = Object;
 
-    constructor(private dashboardService: DashboardService) {
+    constructor(
+        private dashboardService: DashboardService,
+        private router: Router
+    ) {
         this.searchSubject.pipe(
             debounceTime(300),
             distinctUntilChanged()
@@ -179,5 +183,9 @@ export class DashboardComponent implements OnInit {
             default:
                 return '?';
         }
+    }
+
+    onCompanyClick(company: Company): void {
+        this.router.navigate(['/company', company.securityCode]);
     }
 } 

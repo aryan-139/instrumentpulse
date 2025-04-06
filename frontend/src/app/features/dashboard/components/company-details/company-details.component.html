@@ -1,0 +1,44 @@
+<div class="company-details-container">
+    <div *ngIf="loading" class="loading-spinner">
+        <div class="spinner"></div>
+        <p>Loading company details...</p>
+    </div>
+
+    <div *ngIf="error" class="error-message">
+        {{ error }}
+    </div>
+
+    <div *ngIf="company && !loading" class="company-details-card">
+        <div class="company-header">
+            <h1>{{ company.securityName }}</h1>
+            <span class="status-badge" [ngClass]="company.status">
+                {{ company.status }}
+            </span>
+        </div>
+
+        <div class="company-info">
+            <div class="info-section">
+                <h2>Basic Information</h2>
+                <p><strong>Security Code:</strong> {{ company.securityCode }}</p>
+                <p><strong>ISIN:</strong> {{ company.isinNumber }}</p>
+                <p><strong>Group:</strong> {{ company.group }}</p>
+                <p><strong>Face Value:</strong> {{ company.faceValue }}</p>
+            </div>
+
+            <div class="info-section">
+                <h2>Industry Information</h2>
+                <p><strong>Industry:</strong> {{ company.industry }}</p>
+                <p><strong>Sector:</strong> {{ company.sectorName }}</p>
+                <p><strong>Industry Group:</strong> {{ company.igroupName }}</p>
+                <p><strong>Industry Subgroup:</strong> {{ company.isubgroupName }}</p>
+            </div>
+
+            <div class="info-section">
+                <h2>Additional Details</h2>
+                <p><strong>Instrument:</strong> {{ company.instrument }}</p>
+                <p><strong>Issuer Name:</strong> {{ company.issuerName }}</p>
+                <p><strong>Security ID:</strong> {{ company.securityId }}</p>
+            </div>
+        </div>
+    </div>
+</div>
