@@ -4,6 +4,8 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { debounceTime, distinctUntilChanged, Subject } from 'rxjs';
 
+type SearchMode = 'partial' | 'exact' | 'startsWith' | 'endsWith' | 'regex' | 'smart';
+
 @Component({
     selector: 'app-dashboard',
     standalone: true,
@@ -19,6 +21,15 @@ export class DashboardComponent implements OnInit {
     loading: boolean = true;
     error: string | null = null;
     searchTerm: string = '';
+    searchMode: SearchMode = 'partial';
+    searchModes: { value: SearchMode; label: string }[] = [
+        { value: 'partial', label: 'Contains' },
+        { value: 'exact', label: 'Exact Match' },
+        { value: 'startsWith', label: 'Starts With' },
+        { value: 'endsWith', label: 'Ends With' },
+        { value: 'regex', label: 'Regex' },
+        { value: 'smart', label: 'Smart'}
+    ];
     private searchSubject = new Subject<string>();
     readonly Object = Object;
 
@@ -40,6 +51,10 @@ export class DashboardComponent implements OnInit {
         this.searchSubject.next(this.searchTerm);
     }
 
+    onSearchModeChange(): void {
+        this.filterCompanies(this.searchTerm);
+    }
+
     filterCompanies(searchTerm: string): void {
         if (!searchTerm) {
             this.filteredCompanies = this.companies;
@@ -47,13 +62,37 @@ export class DashboardComponent implements OnInit {
         }
 
         const term = searchTerm.toLowerCase();
-        this.filteredCompanies = this.companies.filter(company =>
-            company.securityName.toLowerCase().includes(term) ||
-            company.securityCode.toLowerCase().includes(term) ||
-            company.isinNumber.toLowerCase().includes(term) ||
-            company.industry.toLowerCase().includes(term) ||
-            company.sectorName.toLowerCase().includes(term)
-        );
+        this.filteredCompanies = this.companies.filter(company => {
+            const fields = [
+                company.securityName,
+                company.securityCode,
+                company.isinNumber,
+                company.industry,
+                company.sectorName
+            ].map(f => f.toLowerCase());
+
+            return fields.some(field => {
+                switch (this.searchMode) {
+                    case 'partial':
+                        return field.includes(term);
+                    case 'exact':
+                        return field === term;
+                    case 'startsWith':
+                        return field.startsWith(term);
+                    case 'endsWith':
+                        return field.endsWith(term);
+                    case 'regex':
+                        try {
+                            const regex = new RegExp(term, 'i');
+                            return regex.test(field);
+                        } catch (e) {
+                            return false;
+                        }
+                    default:
+                        return false;
+                }
+            });
+        });
     }
 
     loadCompanies(): void {
@@ -104,5 +143,39 @@ export class DashboardComponent implements OnInit {
         this.selectedStatus = status;
         this.searchTerm = ''; // Reset search when changing status
         this.loadCompanies();
+    }
+
+    getSearchPlaceholder(): string {
+        switch (this.searchMode) {
+            case 'partial':
+                return 'Search by name, code, ISIN, industry or sector...';
+            case 'exact':
+                return 'Enter exact text to match...';
+            case 'startsWith':
+                return 'Enter text to match at the start...';
+            case 'endsWith':
+                return 'Enter text to match at the end...';
+            case 'regex':
+                return 'Enter regular expression pattern...';
+            default:
+                return 'Search...';
+        }
+    }
+
+    getSearchModeIcon(): string {
+        switch (this.searchMode) {
+            case 'partial':
+                return '⊂';
+            case 'exact':
+                return '=';
+            case 'startsWith':
+                return '^';
+            case 'endsWith':
+                return '$';
+            case 'regex':
+                return '.*';
+            default:
+                return '?';
+        }
     }
 } 

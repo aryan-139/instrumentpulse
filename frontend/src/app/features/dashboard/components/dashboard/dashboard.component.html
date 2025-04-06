@@ -2,8 +2,22 @@
     <header class="dashboard-header">
         <h1>BSE Companies Dashboard</h1>
         <div class="search-container">
-            <input type="text" [(ngModel)]="searchTerm" (ngModelChange)="onSearchInput()"
-                placeholder="Search by name, code, ISIN, industry or sector..." class="search-input">
+            <div class="search-controls">
+                <div class="search-input-wrapper">
+                    <span class="search-icon">🔍</span>
+                    <input type="text" [(ngModel)]="searchTerm" (ngModelChange)="onSearchInput()"
+                        [placeholder]="getSearchPlaceholder()" class="search-input"
+                        [class.regex-mode]="searchMode === 'regex'">
+                    <span class="search-mode-indicator" [ngClass]="searchMode">
+                        {{ getSearchModeIcon() }}
+                    </span>
+                </div>
+                <select [(ngModel)]="searchMode" (ngModelChange)="onSearchModeChange()" class="search-mode-select">
+                    <option *ngFor="let mode of searchModes" [value]="mode.value">
+                        {{ mode.label }}
+                    </option>
+                </select>
+            </div>
         </div>
         <div class="status-filter">
             <button *ngFor="let stat of statusStats" [class.active]="selectedStatus === stat.status"

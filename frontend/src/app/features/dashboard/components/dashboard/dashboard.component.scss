@@ -17,13 +17,110 @@
     margin-bottom: 1.5rem;
 }
 
+.search-controls {
+    display: flex;
+    gap: 1rem;
+    align-items: center;
+    width: 100%;
+}
+
+.search-input-wrapper {
+    position: relative;
+    flex: 1;
+    min-width: 0;
+    display: flex;
+    align-items: center;
+}
+
+.search-icon {
+    position: absolute;
+    left: 0.75rem;
+    font-size: 1rem;
+    color: #666;
+    pointer-events: none;
+}
+
 .search-input {
     width: 100%;
     padding: 0.75rem 1rem;
+    padding-left: 2.5rem;
+    padding-right: 2.5rem;
     border: 2px solid #e0e0e0;
     border-radius: 4px;
     font-size: 1rem;
     transition: all 0.3s ease;
+    box-sizing: border-box;
+
+    &:focus {
+        outline: none;
+        border-color: #3498db;
+        box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.1);
+
+        &+.search-icon {
+            color: #3498db;
+        }
+    }
+
+    &::placeholder {
+        color: #999;
+    }
+
+    &.regex-mode {
+        font-family: monospace;
+        background-color: #f8f9fa;
+    }
+}
+
+.search-mode-indicator {
+    position: absolute;
+    right: 0.75rem;
+    top: 50%;
+    transform: translateY(-50%);
+    font-size: 0.875rem;
+    color: #666;
+    background-color: #f0f0f0;
+    padding: 0.25rem 0.5rem;
+    border-radius: 4px;
+    font-family: monospace;
+    pointer-events: none;
+
+    &.partial {
+        color: #3498db;
+        background-color: #e3f2fd;
+    }
+
+    &.exact {
+        color: #2e7d32;
+        background-color: #e8f5e9;
+    }
+
+    &.startsWith {
+        color: #f57c00;
+        background-color: #fff3e0;
+    }
+
+    &.endsWith {
+        color: #7b1fa2;
+        background-color: #f3e5f5;
+    }
+
+    &.regex {
+        color: #c62828;
+        background-color: #ffebee;
+    }
+}
+
+.search-mode-select {
+    padding: 0.75rem 1rem;
+    border: 2px solid #e0e0e0;
+    border-radius: 4px;
+    font-size: 1rem;
+    background-color: white;
+    color: #2c3e50;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    min-width: 150px;
+    max-width: 200px;
 
     &:focus {
         outline: none;
@@ -31,8 +128,8 @@
         box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.1);
     }
 
-    &::placeholder {
-        color: #999;
+    option {
+        padding: 0.5rem;
     }
 }
 
