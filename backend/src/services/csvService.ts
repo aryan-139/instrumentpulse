@@ -19,6 +19,12 @@ interface BSECompany {
     isubgroupName: string;
 }
 
+interface StatusStats {
+    status: string;
+    count: number;
+    percentage: number;
+}
+
 export class CSVService {
     private static readonly CSV_FILE_PATH = path.join(__dirname, '../data/bse_companies.csv');
 
@@ -31,7 +37,8 @@ export class CSVService {
                 trim: true,
                 relax_quotes: true,
                 relax_column_count: true,
-                skip_records_with_error: true
+                skip_records_with_error: true,
+                escape: '\\'
             });
 
             return records.map((record: any) => ({
@@ -53,6 +60,44 @@ export class CSVService {
         } catch (error) {
             console.error('Error reading CSV file:', error);
             throw new Error('Failed to read BSE companies data');
+        }
+    }
+
+    static async getCompaniesByStatus(status: string): Promise<BSECompany[]> {
+        try {
+            const companies = await this.getBSECompanies();
+            return companies.filter(company => 
+                company.status.toLowerCase() === status.toLowerCase()
+            );
+        } catch (error) {
+            console.error('Error filtering companies by status:', error);
+            throw new Error('Failed to filter companies by status');
+        }
+    }
+
+    static async getStatusStatistics(): Promise<StatusStats[]> {
+        try {
+            const companies = await this.getBSECompanies();
+            const statusMap = new Map<string, number>();
+            const totalCompanies = companies.length;
+
+            // Count companies by status
+            companies.forEach(company => {
+                const status = company.status || 'Unknown';
+                statusMap.set(status, (statusMap.get(status) || 0) + 1);
+            });
+
+            // Convert to array and calculate percentages
+            return Array.from(statusMap.entries())
+                .map(([status, count]) => ({
+                    status,
+                    count,
+                    percentage: Number(((count / totalCompanies) * 100).toFixed(2))
+                }))
+                .sort((a, b) => b.count - a.count);
+        } catch (error) {
+            console.error('Error getting status statistics:', error);
+            throw new Error('Failed to get status statistics');
         }
     }
 
