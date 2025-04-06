@@ -1,6 +1,10 @@
 <div class="dashboard-container">
     <header class="dashboard-header">
         <h1>BSE Companies Dashboard</h1>
+        <div class="search-container">
+            <input type="text" [(ngModel)]="searchTerm" (ngModelChange)="onSearchInput()"
+                placeholder="Search by name, code, ISIN, industry or sector..." class="search-input">
+        </div>
         <div class="status-filter">
             <button *ngFor="let stat of statusStats" [class.active]="selectedStatus === stat.status"
                 (click)="onStatusChange(stat.status)" class="status-button">
@@ -23,7 +27,7 @@
         </div>
 
         <div *ngIf="!loading && !error" class="companies-grid">
-            <div *ngFor="let company of companies" class="company-card">
+            <div *ngFor="let company of filteredCompanies" class="company-card">
                 <div class="company-header">
                     <h3>{{ company.securityName }}</h3>
                     <span class="status-badge" [ngClass]="company.status">
