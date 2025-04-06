@@ -55,4 +55,9 @@ export class DashboardService {
     addCompany(company: Company): Observable<{ message: string }> {
         return this.http.post<{ message: string }>(`${this.apiUrl}/api/bse/companies`, company);
     }
+
+    // Get company by security code
+    getCompanyBySecurityCode(securityCode: string): Observable<Company> {
+        return this.http.get<Company>(`${this.apiUrl}/api/bse/companies/${securityCode}`);
+    }
 } 

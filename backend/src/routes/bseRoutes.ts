@@ -69,4 +69,26 @@ router.post('/companies', async (req, res) => {
     }
 });
 
+// Get company details by security code
+router.get('/companies/:securityCode', async (req, res) => {
+    try {
+        const { securityCode } = req.params;
+        const company = await CSVService.getCompanyBySecurityCode(securityCode);
+
+        if (!company) {
+            return res.status(404).json({
+                error: 'Company not found',
+                message: `No company found with security code: ${securityCode}`
+            });
+        }
+
+        res.json(company);
+    } catch (error) {
+        res.status(500).json({
+            error: 'Failed to fetch company details',
+            message: error instanceof Error ? error.message : 'Unknown error'
+        });
+    }
+});
+
 export default router; 

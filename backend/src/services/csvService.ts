@@ -110,4 +110,17 @@ export class CSVService {
             throw new Error('Failed to add company data');
         }
     }
+
+    static async getCompanyBySecurityCode(securityCode: string): Promise<BSECompany | null> {
+        try {
+            const companies = await this.getBSECompanies();
+            const company = companies.find(company =>
+                company.securityCode === securityCode
+            );
+            return company || null;
+        } catch (error) {
+            console.error('Error finding company by security code:', error);
+            throw new Error('Failed to find company by security code');
+        }
+    }
 }

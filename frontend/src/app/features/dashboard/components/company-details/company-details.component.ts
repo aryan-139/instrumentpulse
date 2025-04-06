@@ -31,12 +31,9 @@ export class CompanyDetailsComponent implements OnInit {
   }
 
   loadCompanyDetails(securityCode: string): void {
-    this.dashboardService.getCompanies().subscribe({
-      next: (companies) => {
-        this.company = companies.find(c => c.securityCode === securityCode) || null;
-        if (!this.company) {
-          this.error = 'Company not found';
-        }
+    this.dashboardService.getCompanyBySecurityCode(securityCode).subscribe({
+      next: (company) => {
+        this.company = company;
         this.loading = false;
       },
       error: (err) => {
