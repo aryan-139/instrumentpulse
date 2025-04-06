@@ -262,3 +262,19 @@
     border-radius: 4px;
     text-align: center;
 }
+
+.dashboard-main-content {
+    display: flex;
+    gap: 1rem;
+    margin-top: 1rem;
+}
+
+.dashboard-content {
+    flex: 3;
+}
+
+.tradingview-widget-wrapper {
+    flex: 1;
+    min-width: 400px;
+    max-width: 400px;
+}

@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, Renderer2 } from '@angular/core';
 import { DashboardService, Company, StatusStats } from '../../services/dashboard.service';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
@@ -36,7 +36,8 @@ export class DashboardComponent implements OnInit {
 
     constructor(
         private dashboardService: DashboardService,
-        private router: Router
+        private router: Router,
+        private renderer: Renderer2
     ) {
         this.searchSubject.pipe(
             debounceTime(300),
@@ -49,6 +50,7 @@ export class DashboardComponent implements OnInit {
     ngOnInit(): void {
         this.loadCompanies();
         this.loadStatusStats();
+        this.loadTradingViewWidget();
     }
 
     onSearchInput(): void {
@@ -187,5 +189,26 @@ export class DashboardComponent implements OnInit {
 
     onCompanyClick(company: Company): void {
         this.router.navigate(['/company', company.securityCode]);
+    }
+
+    loadTradingViewWidget(): void {
+        const script = this.renderer.createElement('script');
+        script.type = 'text/javascript';
+        script.src = 'https://s3.tradingview.com/external-embedding/embed-widget-timeline.js';
+        script.async = true;
+
+        script.text = `
+          {
+            "feedMode": "all_symbols",
+            "isTransparent": false,
+            "displayMode": "regular",
+            "width": "100%",
+            "height": "100%",
+            "colorTheme": "light",
+            "locale": "en"
+          }
+        `;
+
+        this.renderer.appendChild(document.querySelector('.tradingview-widget-container'), script);
     }
 } 
